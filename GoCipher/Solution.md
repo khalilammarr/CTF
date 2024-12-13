@@ -110,8 +110,8 @@ It did actually pass so instead of trying to figure out how the program handles 
 >We’ll start by testing every printable character one by one. When the program prints a success message, we add the character to the flag and keep going. We’ll keep doing this until we hit the '}' character, which tells us the flag is complete
 >If you don’t know about brute force, it’s basically trying every key on your keyboard, one at a time, until you get a success message. Instead of doing this manually which will take you days and even weeks, we’ll automate the process.
 
-***This is the script that will make that happen [solve.py](solve.py)
-***
+***This is the script that will make that happen [solve.py](solve.py)***
+
 
 * By executing the script we find the following flag :
   ![image](https://github.com/user-attachments/assets/4c804a12-9311-4c03-8b11-0f189a193d09)
