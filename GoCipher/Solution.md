@@ -101,8 +101,6 @@ __   __    _ _            _
  ###############################################
 
 Welcome to the challenge!
-
-
 Flag : Securinets{
 
 Congratulations! You have solved the challenge!
@@ -110,6 +108,7 @@ Congratulations! You have solved the challenge!
 ```
 It did actually pass so instead of trying to figure out how the program handles our input and reverse its logic etc ... we can simply use brute force to find the flag.
 >We’ll start by testing every printable character one by one. When the program prints a success message, we add the character to the flag and keep going. We’ll keep doing this until we hit the '}' character, which tells us the flag is complete
+>If you don’t know about brute force, it’s basically trying every key on your keyboard, one at a time, until you get a success message. Instead of doing this manually which will take you days and even weeks, we’ll automate the process.
 
 ***This is the script that will make that happen [solve.py](solve.py)
 ***
