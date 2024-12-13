@@ -1,2 +1,2 @@
 # GoCipher
-* Category *
+* *Category*
