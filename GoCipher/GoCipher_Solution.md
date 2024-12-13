@@ -190,7 +190,7 @@ void __fastcall main_main()
   main_win(v37, v34, v38, v3, v20, v39, v40, v41, v42);
 }
 ```
-Looking at the disassembly code, we can see the program doesn’t check the length of the entered flag. This means even an incomplete flag could potentially pass, as long as the characters match the original flag. If that’s the case, we should be able to brute force our way to the complete flag.
+Looking at the disassembly code, we can see the program doesn’t check the length of the entered flag. This means **even an incomplete flag could ***potentially*** pass**, as long as the characters match the original flag. If that’s the case, we should be able to brute force our way to the complete flag.
 Since we know the flag format : Securinets{###} let's try Securinets as an input !
 ```
 PS C:\Users\MSI\CTF\Securinets Mini_CTF\GoCipher> .\gocipher.exe
@@ -282,7 +282,7 @@ Congratulations! You have solved the challenge!
 
  ###############################################
 ```
-So instead of trying to figure out how the program handles our input and reverse the logic ... we can simply use brute force to find the flag.
+So instead of trying to figure out how the program handles our input and reverse its logic etc ... we can simply use brute force to find the flag.
 >We’ll start by testing every printable character one by one. When the program prints a success message, we add the character to the flag and keep going. We’ll keep doing this until we hit the '}' character, which tells us the flag is complete
 
 ***This is the script that will make that happen***
@@ -323,7 +323,8 @@ def brute_force_GoCipher_flag():
 brute_force_GoCipher_flag()
 ```
 * By executing the script we find the following flag :
-```
-    Valid flag found so far: Securinets{1_L0v3_G0l4ng5_50_MuCH_d0n'T_You_?}
-```
-  **Securinets{1_L0v3_G0l4ng5_50_MuCH_d0n'T_You?}**
+  ![image](https://github.com/user-attachments/assets/4c804a12-9311-4c03-8b11-0f189a193d09)
+
+-------->     ***Securinets{1_L0v3_G0l4ng5_50_MuCH_d0n'T_You?}***
+
+  
