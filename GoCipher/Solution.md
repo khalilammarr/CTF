@@ -30,16 +30,7 @@ void __fastcall main_main()
  ...
  ...
   main_welcome();
-  fmt_Fprintf(
-    (unsigned int)off_4F33C8,
-    qword_580508,
-    (unsigned int)"Flag : booleanbdoUxXvintegercomplexfloat32float6419531259765625consoleinvaliduintptrChanDir Value>:eventsCopySidWSARecvWSASendconnectforcegcallocmWcpuprofallocmRunknowngctraceIO : gp= found at *( s.elemsize= B (",
-    7,
-    0,
-    0,
-    0,
-    v0,
-    v1);
+ ...
   p_string = (string *)runtime_newobject((const RTYPE *)&RTYPE_string);
   v60 = (__int64 *)p_string;
   p_string->ptr = 0LL;
@@ -135,43 +126,9 @@ Congratulations! You have solved the challenge!
 It did actually pass so instead of trying to figure out how the program handles our input and reverse its logic etc ... we can simply use brute force to find the flag.
 >We’ll start by testing every printable character one by one. When the program prints a success message, we add the character to the flag and keep going. We’ll keep doing this until we hit the '}' character, which tells us the flag is complete
 
-***This is the script that will make that happen***
-```
-import subprocess
-flag = ""
-# The characters to try
-CHOICES = (
-    "0123456789"
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    "abcdefghijklmnopqrstuvwxyz"
-    "'_{}=+-*/!?%&@#^~`|\\:;,.<>[]()"
-)
+***This is the script that will make that happen [solver.py](solver.py)
+***
 
-def brute_force_GoCipher_flag():
-    global flag
-    while not flag.endswith('}'):
-        for ch in CHOICES:
-            candidate = flag + ch
-            print(f"Trying key: {candidate}")
-            process = subprocess.Popen(
-                [r'.\gocipher.exe'],  # The executable
-                stdin=subprocess.PIPE,  # Pipe the input to stdin
-                stdout=subprocess.PIPE,  # Capture the output
-                stderr=subprocess.PIPE,  # Capture any errors
-                text=True  # Return output as a string (not bytes)
-            )
-            
-            # Pass the candidate as input to inverted.exe and get the output
-            output, error = process.communicate(input=candidate + "\n")  # Send input and get output
-
-            output = output.strip()  # Clean up the output
-            if "Congratulations" in output:
-                print(f"Valid flag found so far: {candidate}")
-                flag = candidate  # Update the global flag with the correct character
-                break  # Move to the next character
-
-brute_force_GoCipher_flag()
-```
 * By executing the script we find the following flag :
   ![image](https://github.com/user-attachments/assets/4c804a12-9311-4c03-8b11-0f189a193d09)
 
