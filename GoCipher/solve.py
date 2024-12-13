@@ -7,7 +7,7 @@ CHOICES = (
     "abcdefghijklmnopqrstuvwxyz"
     "'_{}=+-*/!?%&@#^~`|\\:;,.<>[]()"
 )
-kl
+
 def brute_force_GoCipher_flag():
     global flag
     while not flag.endswith('}'):
