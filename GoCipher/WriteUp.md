@@ -1,6 +1,6 @@
 # GoCipher
 * ***Category : Reverse Engineering***  
- >   **Break Leg !**
+ >   Description : **Break Leg !**
 
 An executable was attached ( *.exe* ).
 ## Solution
@@ -190,8 +190,7 @@ void __fastcall main_main()
   main_win(v37, v34, v38, v3, v20, v39, v40, v41, v42);
 }
 ```
-Upon examining the disassembly code, we notice that the program doesn't impose any condition on the length of the entered flag.. This means that even an incomplete flag could potentially pass the check if the entered characters match the corresponding characters in the original flag. If this is the case we should be able to use brute force to find the complete flag.
-
+Looking at the disassembly code, we can see the program doesn’t check the length of the entered flag. This means even an incomplete flag could potentially pass, as long as the characters match the original flag. If that’s the case, we should be able to brute force our way to the complete flag.
 Since we know the flag format : Securinets{###} let's try Securinets as an input !
 ```
 PS C:\Users\MSI\CTF\Securinets Mini_CTF\GoCipher> .\gocipher.exe
@@ -283,10 +282,10 @@ Congratulations! You have solved the challenge!
 
  ###############################################
 ```
-So instead of trying to figure out how the program handles our input and reverse the logic ... we can just brute-force our way to the flag.
+So instead of trying to figure out how the program handles our input and reverse the logic ... we can simply use brute force to find the flag.
 >We’ll start by testing every printable character one by one. When the program prints a success message, we add the character to the flag and keep going. We’ll keep doing this until we hit the '}' character, which tells us the flag is complete
 
-***This is the script that will make this happen***
+***This is the script that will make that happen***
 ```
 import subprocess
 flag = ""
@@ -316,15 +315,15 @@ def brute_force_GoCipher_flag():
             output, error = process.communicate(input=candidate + "\n")  # Send input and get output
 
             output = output.strip()  # Clean up the output
-            
-            # If the output contains "Congratulations", the key is correct
-            print(f"AHAWA: {output}")
             if "Congratulations" in output:
-                print(f"Valid serial key found so far: {candidate}")
+                print(f"Valid flag found so far: {candidate}")
                 flag = candidate  # Update the global flag with the correct character
                 break  # Move to the next character
 
 brute_force_GoCipher_flag()
 ```
 * By executing the script we find the following flag :
-  ***Securinets{1_L0v3_G0l4ng5_50_MuCH_d0n'T_You_?}***
+```
+    Valid flag found so far: Securinets{1_L0v3_G0l4ng5_50_MuCH_d0n'T_You_?}
+```
+  **Securinets{1_L0v3_G0l4ng5_50_MuCH_d0n'T_You?}**
