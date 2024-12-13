@@ -40,18 +40,7 @@ void __fastcall main_main()
   fmt_Fscanln((unsigned int)off_4F33E8, qword_580500, (unsigned int)v59, 1, 1, v4, v5, v6, v7);
   v8 = *v60;
   v13 = runtime_stringtoslicerune((__int64)v53, *v60, v60[1], 1, 1, v9, v10, v11, v12);
-  v58 = v13;
-  v56 = v8;
-  v45 = 18608;
-  v46 = -1689127791;
-  v47 = 0x5FC8434AF08048E6LL;
-  v48 = 0x729813986D12F65CLL;
-  v49 = 0x7F6E6A476E74953DLL;
-  v50 = 0x6E65C47C87462F4LL;
-  v51 = 0x44D6EF49D6CC860LL;
-  v18 = 0LL;
-  v19 = 0LL;
-  v20 = 0LL;
+   ...
   while ( v8 > v18 )
   {
     v54 = v18;
@@ -81,10 +70,6 @@ void __fastcall main_main()
     v22 = v57;
     v23 = runtime_concatstring2(0, v57, v55, v28, v21, v29, v30, v31, v32);
     v18 = v54 + 1;
-    v19 = v22;
-    v20 = v23;
-    v13 = v58;
-    v8 = v56;
   }
   v34 = v20;
   v35 = runtime_stringtoslicerune((__int64)v52, v20, v19, v3, v20, v14, v15, v16, v17);
