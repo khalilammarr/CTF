@@ -282,7 +282,7 @@ Congratulations! You have solved the challenge!
 
  ###############################################
 ```
-So instead of trying to figure out how the program handles our input and reverse its logic etc ... we can simply use brute force to find the flag.
+It did actually pass so instead of trying to figure out how the program handles our input and reverse its logic etc ... we can simply use brute force to find the flag.
 >We’ll start by testing every printable character one by one. When the program prints a success message, we add the character to the flag and keep going. We’ll keep doing this until we hit the '}' character, which tells us the flag is complete
 
 ***This is the script that will make that happen***
