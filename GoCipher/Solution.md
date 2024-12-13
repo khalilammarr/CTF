@@ -27,73 +27,13 @@ Let's take a look at the disassembly using [IDA](https://getintopc.com/softwares
 // main.main
 void __fastcall main_main()
 {
-  int v0; // r10d
-  int v1; // r11d
-  string *p_string; // rax
-  __int64 v3; // rdi
-  int v4; // r8d
-  int v5; // r9d
-  int v6; // r10d
-  int v7; // r11d
-  __int64 v8; // rbx
-  __int64 v9; // r8
-  int v10; // r9d
-  int v11; // r10d
-  int v12; // r11d
-  __int64 v13; // rax
-  __int64 v14; // r8
-  int v15; // r9d
-  int v16; // r10d
-  int v17; // r11d
-  __int64 v18; // rcx
-  __int64 v19; // rdx
-  __int64 v20; // rsi
-  int v21; // esi
-  __int64 v22; // rbx
-  __int64 v23; // rax
-  __int64 v24; // rdx
-  __int64 v25; // rdi
-  int v26; // edi
-  int v27; // ebx
-  __int64 v28; // rax
-  int v29; // r8d
-  int v30; // r9d
-  int v31; // r10d
-  int v32; // r11d
-  unsigned __int64 v33; // rdi
-  __int64 v34; // rbx
-  __int64 v35; // rax
-  unsigned __int64 i; // rcx
-  __int64 v37; // rax
-  __int64 v38; // rcx
-  int v39; // r8d
-  int v40; // r9d
-  int v41; // r10d
-  int v42; // r11d
-  __int64 v43; // [rsp-3Ah] [rbp-1A8h]
-  __int64 v44; // [rsp-32h] [rbp-1A0h]
-  __int16 v45; // [rsp+0h] [rbp-16Eh]
-  int v46; // [rsp+2h] [rbp-16Ch]
-  __int64 v47; // [rsp+6h] [rbp-168h]
-  __int64 v48; // [rsp+Eh] [rbp-160h]
-  __int64 v49; // [rsp+16h] [rbp-158h]
-  __int64 v50; // [rsp+1Eh] [rbp-150h]
-  __int64 v51; // [rsp+26h] [rbp-148h]
-  char v52[24]; // [rsp+2Eh] [rbp-140h] BYREF
-  char v53[128]; // [rsp+AEh] [rbp-C0h] BYREF
-  __int64 v54; // [rsp+12Eh] [rbp-40h]
-  __int64 v55; // [rsp+136h] [rbp-38h]
-  __int64 v56; // [rsp+13Eh] [rbp-30h]
-  __int64 v57; // [rsp+146h] [rbp-28h]
-  __int64 v58; // [rsp+14Eh] [rbp-20h]
-  _QWORD v59[2]; // [rsp+156h] [rbp-18h] BYREF
-  __int64 *v60; // [rsp+166h] [rbp-8h]
-
+ ...
+ ...
   main_welcome();
   fmt_Fprintf(
     (unsigned int)off_4F33C8,
     qword_580508,
-    (unsigned int)"Flag : booleanbdoUxXvintegercomplexfloat32float6419531259765625consoleinvaliduintptrChanDir Value>:eventsCopySidWSARecvWSASendconnectforcegcallocmWcpuprofallocmRunknowngctraceIO waitrunningsyscallwaitingforevernetworkUNKNOWN, goid= s=nil\n (scan  MB in pacer: % CPU ( zombie, j0 = head = panic:  nmsys= locks= dying= allocsGODEBUG m->g0= pad1=  pad2=  text= minpc= \tvalue= (scan)\ttypes : type avx512fos/execruntimetls3desGoString01234567beEfFgGv48828125infinitystrconv.parsing ParseIntnil Poolno anodeCancelIoReadFileAcceptExWSAIoctlshutdownscavengepollDesctraceBufdeadlockraceFinipanicnilcgocheckrunnable procid rax     rbx     rcx     rdx     rdi     rsi     rbp     rsp     r8      r9      r10     r11     r12     r13     r14     r15     rip     rflags  cs      fs      gs       is not  pointer packed=BAD RANK status unknown(trigger= npages= nalloc= nfreed=[signal  newval= mcount= bytes,  stack=[ minLC=  maxpc= \tstack=[ minutes status= etypes wsaioctlavx512bwavx512vlgo/typesnet/httpgo/buildnetedns0tlskyberx509sha101234567_244140625ParseUintcomplex64interfaceinvalid nreflect: funcargs(bad indirInterfaceFindCloseLocalFreeMoveFileWWriteFileWSASendTotimerSendpollCacheprofBlockstackpoolhchanLeafwbufSpansGC (idle)mSpanDeadinittracescavtracepanicwaitchan sendpreemptedcoroutinecopystack -> node= ms cpu,  (forced) wbuf1.n= wbuf2.n= s.limit= s.state= B work ( B exp.)  marked   unmarked in use)\n, size = bad prune, tail = recover:  not in [ctxt != 0, oldval=, newval= threads=: status= blocked= lockedg=atomicor8 runtime= m->curg=(unknown)traceback} stack=[ gp.goid= lockedm=ntdll.dllpsapi.dllInheritedpclmulqdqmath/randtlsrsakex012345678912207031256103515625ParseFloatwinsymlink/dev/stdincomplex128t.Kind == owner diedDnsQuery_WGetIfEntryCancelIoExCreatePipeGetVersionWSACleanupWSAStartupgetsockoptsetsockoptdnsapi.dllws2_32.dllnotifyListprofInsertstackLargeNot workermSpanInUseGOMAXPROCSstop tracedisablethpinvalidptrschedtracesemacquiredebug call flushGen  MB goal, s.state =  s.base()= heapGoal=GOMEMLIMIT KiB now,  pages at  sweepgen= sweepgen , bound = , limit = exitThreadBad varintGC forced\n runqueue= stopwait= runqsize= gfreecnt= throwing= spinning=atomicand8float64nanfloat32nanException  ptrSize=  targetpc= until pc=unknown pcruntime: ggoroutine LockFileExWSASocketWexecerrdothttp2debugcrypto/tlsbad verb '%0123456789_30517578125short write/dev/stdout/dev/stderrOpenProcessunreachableGetFileTypebad argSizemethodargs(reflect.Setbroken pipebad messagefile existsbad addressRegCloseKeyCloseHandleCreateFileWDeleteFileWExitProcessFreeLibrarySetFileTimeVirtualLockWSARecvFromclosesocketgetpeernamegetsocknamecrypt32.dllmswsock.dllsecur32.dllshell32.dlluserenv.dllassistQueuenetpollInitreflectOffsglobalAllocmSpanManualstart traceclobberfreegccheckmarkscheddetailunspecifiedcgocall nil s.nelems=   of size  runtime: p  ms clock,  nBSSRoots=runtime: P  exp.) for minTrigger=GOMEMLIMIT=bad m value, elemsize= freeindex= span.list=, npages =  p->status= in status  idleprocs= gcwaiting= schedtick= timerslen= mallocing=bad timedivfloat64nan1float64nan2float64nan3float32nan2GOTRACEBACK) at entry+ (targetpc= , plugin: runtime: g : frame.sp=created by ProcessPrngMoveFileExWNetShareAddNetShareDeli/o timeoutgocachehashgocachetesthttp2clienthttp2serverarchive/tartls10servercrypto/x509archive/zip152587890625762939453125short bufferinvalid slothost is downillegal seekGetLengthSidGetLastErrorGetStdHandleGetTempPathWLoadLibraryWReadConsoleWSetEndOfFileTransmitFileGetAddrInfoWadvapi32.dlliphlpapi.dllkernel32.dllnetapi32.dllsweepWaiterstraceStringsspanSetSpinemspanSpecialtraceTypeTabgcBitsArenasmheapSpecialgcpacertraceharddecommitmadvdontneeddumping heapchan receivelfstack.push span.limit= span.state=bad flushGen MB stacks, worker mode  nDataRoots= nSpanRoots= wbuf1=<nil> wbuf2=<nil> gcscandone runtime: gp= found at *( s.elemsize= B (",
+    (unsigned int)"Flag : booleanbdoUxXvintegercomplexfloat32float6419531259765625consoleinvaliduintptrChanDir Value>:eventsCopySidWSARecvWSASendconnectforcegcallocmWcpuprofallocmRunknowngctraceIO : gp= found at *( s.elemsize= B (",
     7,
     0,
     0,
