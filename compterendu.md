@@ -1,9 +1,3 @@
-# **Travaux Pratiques – Base de Données**  
-### **Mohamed Khalil Ammar & Mariem Kammoun**  
-**Groupe RT 2/3**  
-**Année Universitaire : 2024/2025**  
----
-
 ## Contenu du TP
 
 Ce TP est composé de trois parties principales :
