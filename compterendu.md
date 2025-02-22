@@ -27,29 +27,34 @@ CREATE TABLE IF NOT EXISTS `tp1`.`etudiant` (
   `Email` VARCHAR(100) NULL DEFAULT NULL,
   PRIMARY KEY (`Etudiant_ID`)
 ) ENGINE = InnoDB;
-
+````
 ---
 
 ### 2. Gestion des utilisateurs dans MySQL
 - **Création d'utilisateurs** :
+```sql
 CREATE USER 'nom_utilisateur'@'hôte' IDENTIFIED BY 'mot_de_passe';
-
+```
 - **Suppression d'un utilisateur** :
+```sql
 DROP USER 'jean'@'localhost';
-
-- **Changement de mot de passe** :
+```
+- **Changement de mot de passe**
+```sql
 ALTER USER 'jean'@'localhost' IDENTIFIED BY 'nouveauMotDePasse';
-
+```
 - **Gestion des privilèges** :
+```sql
 GRANT ALL PRIVILEGES ON ma_base.* TO 'jean'@'localhost';
 REVOKE INSERT, UPDATE ON ma_base.* FROM 'jean'@'localhost';
-
+```
 - **Création et gestion des rôles** :
+```sql
 CREATE ROLE 'admin_role';
 GRANT ALL PRIVILEGES ON ma_base.* TO 'admin_role';
 GRANT 'admin_role' TO 'jean'@'localhost';
 SET DEFAULT ROLE 'admin_role' FOR 'jean'@'localhost';
-
+```
 ---
 
 ### 3. Exemple de gestion des utilisateurs dans MySQL
