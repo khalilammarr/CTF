@@ -21,6 +21,105 @@ CREATE TABLE IF NOT EXISTS `tp1`.`etudiant` (
   `Email` VARCHAR(100) NULL DEFAULT NULL,
   PRIMARY KEY (`Etudiant_ID`)
 ) ENGINE = InnoDB;
+USE `tp1`;
+
+-- -----------------------------------------------------
+-- Table `tp1`.`enseignant`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tp1`.`enseignant` (
+  `enseignant_id` INT NOT NULL,
+  `departement_id` INT NOT NULL,
+  `nom` VARCHAR(25) NULL DEFAULT NULL,
+  `prenom` VARCHAR(25) NULL DEFAULT NULL,
+  `grade` VARCHAR(25) NULL DEFAULT NULL,
+  `telephone` VARCHAR(10) NULL DEFAULT NULL,
+  `fax` VARCHAR(10) NULL DEFAULT NULL,
+  `email` VARCHAR(100) NULL DEFAULT NULL,
+  PRIMARY KEY (`enseignant_id`),
+  INDEX `departement_id` (`departement_id` ASC) VISIBLE,
+  CONSTRAINT `enseignant_ibfk_1`
+    FOREIGN KEY (`departement_id`)
+    REFERENCES `tp1`.`departement` (`departement_id`)
+) ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+-- -----------------------------------------------------
+-- Table `tp1`.`salle`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tp1`.`salle` (
+  `batiment` VARCHAR(1) NOT NULL,
+  `numero_salle` VARCHAR(10) NOT NULL,
+  `capacité` INT NULL DEFAULT NULL,
+  PRIMARY KEY (`batiment`, `numero_salle`)
+) ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+-- -----------------------------------------------------
+-- Table `tp1`.`reservation`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tp1`.`reservation` (
+  `Reservation_ID` INT NOT NULL,
+  `batiment` VARCHAR(1) NOT NULL,
+  `numero_salle` VARCHAR(10) NOT NULL,
+  `enseignement_id` INT NOT NULL,
+  `departement_id` INT NOT NULL,
+  `enseignant_id` INT NOT NULL,
+  `Date_Resa` DATE NOT NULL DEFAULT (CURRENT_DATE),
+  `Heure_Debut` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `Heure_Fin` TIME NOT NULL DEFAULT '23:00:00',
+  `Nombre_Heures` INT NOT NULL,
+  PRIMARY KEY (`Reservation_ID`),
+  INDEX `FK_Reservation_salle` (`batiment` ASC, `numero_salle` ASC) VISIBLE,
+  INDEX `FK_Reservation_enseignement` (`enseignement_id` ASC, `departement_id` ASC) VISIBLE,
+  INDEX `FK_Reservation_enseignant` (`enseignant_id` ASC) VISIBLE,
+  CONSTRAINT `FK_Reservation_enseignant`
+    FOREIGN KEY (`enseignant_id`)
+    REFERENCES `tp1`.`enseignant` (`enseignant_id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  CONSTRAINT `FK_Reservation_enseignement`
+    FOREIGN KEY (`enseignement_id`, `departement_id`)
+    REFERENCES `tp1`.`enseignement` (`enseignement_id`, `departement_id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  CONSTRAINT `FK_Reservation_salle`
+    FOREIGN KEY (`batiment`, `numero_salle`)
+    REFERENCES `tp1`.`salle` (`batiment`, `numero_salle`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT
+) ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+-- -----------------------------------------------------
+-- Placeholder table for view `tp1`.`email_etudiant`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tp1`.`email_etudiant` (
+  `Nom` INT,
+  `Prenom` INT,
+  `Email` INT
+);
+
+-- -----------------------------------------------------
+-- View `tp1`.`email_etudiant`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `tp1`.`email_etudiant`;
+USE `tp1`;
+CREATE OR REPLACE ALGORITHM=UNDEFINED
+  DEFINER=`root`@`localhost`
+  SQL SECURITY DEFINER
+  VIEW `tp1`.`email_etudiant` AS
+  SELECT `tp1`.`etudiant`.`Nom` AS `Nom`,
+         `tp1`.`etudiant`.`Prenom` AS `Prenom`,
+         `tp1`.`etudiant`.`Email` AS `Email`
+  FROM `tp1`.`etudiant`;
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
 ````
 ---
 
