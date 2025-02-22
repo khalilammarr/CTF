@@ -1,16 +1,3 @@
-from fpdf import FPDF
-
-# Create PDF document
-pdf = FPDF()
-pdf.set_auto_page_break(auto=True, margin=15)
-pdf.add_page()
-pdf.set_font("Arial", style="", size=12)
-
-# Extract the formatted text from the document
-document_text = """TP2 DE GESTION DES BASES DE DONNÉES
-
----
-
 ### Mohamed Khalil Ammar et Mariem Kammoun
 **Groupe RT 2/3**
 **Année Universitaire : 2024/2025**
@@ -27,6 +14,7 @@ Ce TP est composé de trois parties principales :
 - Génération du code SQL du schéma via **Forward Engineering**.
 
 #### Code SQL :
+```sql
 CREATE TABLE IF NOT EXISTS `tp1`.`etudiant` (
   `Etudiant_ID` INT NOT NULL,
   `Nom` VARCHAR(25) NOT NULL,
