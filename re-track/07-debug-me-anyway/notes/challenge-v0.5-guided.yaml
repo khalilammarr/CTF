@@ -1,0 +1,188 @@
+name: "Debug Me Anyway"
+author: "fadigaa"
+category: "Reverse Engineering"
+description: |-
+  Run `gate`. It loads the thing that builds the flag, tells you it is not going to invoke it, and exits.
+
+  ```
+  chmod +x gate
+  ./gate
+  ```
+
+  Fine — open it in a debugger and make it build the flag yourself.
+
+  ```
+  gdb ./gate
+  (gdb) run
+  ```
+
+  It quits on you, and it tells you exactly why. **That refusal is the challenge.**
+
+  ---
+
+  > ⚠️ **Careful with this one, it can get you banned.**
+  >
+  > From the process. `ptrace` lets exactly one debugger attach to a program at a time, and this one grabs its own leash before you can — so you are locked out.
+  >
+  > Nothing here can get you banned from the CTF. Attaching a debugger to a binary you downloaded *is* the entire point of this challenge. Go nuts.
+
+  ---
+
+  **This is a first debugger challenge.** No traps, no punishment for poking around, more than one way through. If you have never opened gdb, start here — the steps below are the whole solve, and they are worth more than the points.
+
+  ## 0. Get pwndbg
+
+  Plain gdb greets you with a blank prompt and tells you nothing. pwndbg fixes that: at every stop it shows registers, the stack, and the disassembly around where you are.
+
+  ```
+  git clone https://github.com/pwndbg/pwndbg
+  cd pwndbg
+  ./setup.sh
+  ```
+
+  Then just run `gdb` as normal — it loads itself. GEF (<https://github.com/hugsy/gef>) is an equally good alternative. Plain gdb can finish this too; you will simply see less.
+
+  ## 1. Look at what is in the file
+
+  The binary is stripped, which means the names of its functions were thrown away. Ask anyway:
+
+  ```
+  pwndbg> info functions
+  ```
+
+  One name survived. Make a note of it — you are going to need it at the end, and the fact that the program told you it "is not going to invoke it" is not a coincidence.
+
+  Worth a look too:
+
+  ```
+  pwndbg> info files
+  ```
+
+  Some of those sections have names the compiler did not choose. If you disassemble one of them now it looks like nonsense. Ask yourself what would have to happen before it stopped looking like nonsense.
+
+  ## 2. Break on the check
+
+  You cannot break on the program's own functions — no names. You do not need to. The check calls `ptrace`, which lives in the C library, and gdb finds that no matter how stripped the binary is:
+
+  ```
+  pwndbg> break ptrace
+  pwndbg> run
+  ```
+
+  You are now stopped *inside* `ptrace`, before it has decided anything.
+
+  ## 3. Step out and find the comparison
+
+  Let the call finish and hand its answer back:
+
+  ```
+  pwndbg> finish
+  ```
+
+  pwndbg shows you where you landed. Look at the next few instructions:
+
+  ```
+  pwndbg> x/6i $pc
+  => 0x40164e:  cmp    $0xffffffffffffffff,%rax
+     0x401652:  sete   %al
+     0x401655:  movzbl %al,%eax
+     0x401658:  add    $0x8,%rsp
+     0x40165c:  ret
+  ```
+
+  There it is. `0xffffffffffffffff` is `-1`. The program is about to compare `ptrace`'s answer against `-1`, and `-1` means "somebody is already tracing me".
+
+  Check what it is holding:
+
+  ```
+  pwndbg> info registers rax
+  rax  0xffffffffffffffff  -1
+  ```
+
+  If you want to watch it happen one instruction at a time, `si` steps into calls and `ni` steps over them. `nearpc` re-draws where you are. Step around, it is free.
+
+  ## 4. Lie to it
+
+  A function hands its result back in `rax`. You are attached to this process. Registers are yours to write:
+
+  ```
+  pwndbg> set $rax = 0
+  ```
+
+  Now `cmp` finds `0`, not `-1`, and the program concludes nobody is watching. You did not remove the check, you did not patch a single byte — you changed *what the check sees*. That idea is the most reusable thing in this category: a check is only as trustworthy as the value it looks at.
+
+  **Order matters.** Set `rax` while still inside `ptrace` and the real `-1` lands on top of yours when the call returns. Do it after `finish`.
+
+  ## 5. Let it get ready
+
+  ```
+  pwndbg> continue
+  ```
+
+  The check passes. The program unpacks its builder, reports that it is not invoking it, and then calls `ptrace` a second time — so the breakpoint you already set stops you again. Nothing new to set up.
+
+  ## 6. Call the function nobody calls
+
+  The program never runs its builder. That does not stop you. You can call any function in a stopped process, with the name you found in step 1:
+
+  ```
+  pwndbg> call (char *) reveal()
+  $1 = 0x405140 "Securinets{...}"
+  ```
+
+  The `(char *)` cast is needed because the binary carries no debug information, so gdb does not know what the function returns. It will say so if you forget.
+
+  With pwndbg you can also go looking for it in memory afterwards:
+
+  ```
+  pwndbg> search -t bytes Securinets{
+  ```
+
+  **Why you could not just call it immediately.** `reveal()` jumps into one of those odd-looking sections, and that section ships encrypted. It only becomes real code once the program has passed its own check and unpacked it. Call it at the first breakpoint and you are jumping into garbage. Defeat the check, let it unpack, *then* call.
+
+  ## Stuck?
+
+  - Still refusing after `set $rax = 0`? You set it before `finish`, so the real `-1` overwrote it.
+  - `call reveal()` says "has unknown return type"? Add the cast: `call (char *) reveal()`.
+  - `call (char *) reveal()` crashes or returns junk? Too early — get past the check and `continue` first.
+  - `search -t string` finds nothing? Use `-t bytes`. pwndbg puts a NUL on the end of a string needle, and the flag keeps going past `Securinets`.
+  - Found a flag that does not work? Read the last line of this page.
+
+  ## Other ways through, all fine
+
+  Break on the `cmp` instruction directly instead of on `ptrace` (`objdump -d gate | grep -A4 'ptrace@plt>$'`). Jump over the check with `set $rip`. Patch the comparison in the file with a hex editor. Call the builder by address rather than by name — the program prints where it loaded it. None of these are wrong.
+
+  ## Requirements
+
+  x86-64 Linux, glibc 2.34+ — Ubuntu 22.04+, Debian 12+, Fedora, Arch, current Kali. It will not start on Ubuntu 20.04 or Mint 20; use a newer VM or WSL. Inside Docker, gdb needs `--cap-add=SYS_PTRACE --security-opt seccomp=unconfined`.
+
+  Read `NOTICE.txt` before you start.
+
+  ---
+
+  *One last thing: there is more than one flag-shaped string in this binary, and only one of them is real. If you went looking for it with a script instead of a debugger, you probably found a liar. The debugger does not lie to you.*
+
+type: dynamic
+extra:
+  function: linear
+  initial: 150
+  decay: 8
+  minimum: 75
+
+connection_info:
+
+flags:
+  - "Securinets{<redacted>}"
+
+files:
+  - attachments/gate
+  - attachments/NOTICE.txt
+
+tags:
+  - Beginner
+  - Linux
+  - Anti-Debug
+  - gdb
+  - pwndbg
+
+version: "0.5"
