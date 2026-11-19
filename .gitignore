@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.venv/
+build/
+*.keystore
+*.jks
+
+# challenge secrets read by re-track build scripts
+re-track/*/src/*.txt
