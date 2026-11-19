@@ -22,7 +22,7 @@ and run the table backwards. The recovered key then unseals the flag.
 - **The transform is per-index but not chained.** Byte `i` depends only on byte `i`, so a player
   who gets the rotation slightly wrong still sees most bytes come out as printable text and knows
   they are close. A chained/CBC-style transform would turn one wrong assumption into total
-  garbage with no feedback — per `docs/CTF-DESIGN-GUIDELINES.md`, that is the difference between
+  garbage with no feedback, which is the difference between
   "challenging" and "frustrating".
 - **The rotation amount is `i & 7`, not a constant.** A constant rotation is solvable by staring;
   a varying one requires actually writing the inverse, which is the skill being taught.

@@ -16,7 +16,7 @@ response body and the check-in is acknowledged; the token is the key the flag is
 
 - **The hostname is deliberately readable and `build.sh` asserts it stays that way.** It is the
   pointer to step one. Sealing it would convert a fair task into "guess where I hid the penny",
-  which `docs/CTF-DESIGN-GUIDELINES.md` names explicitly as negative inspiration.
+  which is not a fair task.
 - **Port 8080, not 80.** Unprivileged, so no player needs `sudo` to listen, and nobody loses an
   hour to a permission error that has nothing to do with the challenge.
 - **The token check is `strstr` over the whole reply, not a strict HTTP parse.** `nc -l -p 8080`,
@@ -33,14 +33,13 @@ response body and the check-in is acknowledged; the token is the key the flag is
   of one process. The thing tested and the thing downloaded are the same bytes.
 - **Designer mode (`RELAY_HOST`) is compiled only into `build/relay-designer`, which must never
   ship.** `build.sh` asserts the override string is absent from the shipping build. It exists
-  because CLAUDE.md requires a known-state mode for every environment-coupled module, and for
-  testing where user namespaces are unavailable.
+  so the logic can be tested in a known state, and for testing where user namespaces are
+  unavailable.
 
 ## Hardened against static extraction (2026-09-21)
 
-The first version narrated its own solve and kept the hostname in `strings`. Both were pulled on
-the user's call: **players use assistants, so a binary that explains itself is a binary that is
-already solved.** What replaced the narration is *observable state*, not silence —
+The first version narrated its own solve and kept the hostname in `strings`. Both were pulled: **a binary that explains itself is a binary that is
+already solved for anyone running an automated tool over it.** What replaced the narration is *observable state*, not silence —
 
 - **One failure line, `relay: check-in failed.`**, for every failure. `build.sh` asserts the old
   guidance strings ("cannot resolve", "nothing answers", "did not carry", "decommissioned",
@@ -85,8 +84,8 @@ Static recovery is now expensive but not impossible: an attacker who emulates th
 correctly reproduces the self-hash, still gets the token and with it the flag offline. That is
 inherent — the binary must be able to compute its own token with no network, so anything it can
 compute, a faithful emulator can compute. What the hardening buys is that **reading the
-decompiler output and reimplementing it is no longer enough**, which is precisely the shortcut the
-session-32 red team used against the Android track. Same class of accepted residual as Straight
+decompiler output and reimplementing it is no longer enough**, which is the shortcut that worked against an
+earlier version of the Android track in testing. Same class of accepted residual as Straight
 Key's one-string offline flag, but priced much higher.
 
 ## Ship note
@@ -98,8 +97,8 @@ which is the single most expensive false belief a networked task can create.
 ## 2026-09-24 — the silence is reversed, on purpose
 
 **Every failure stage now tells the player what happened and what to do about it.** This
-undoes the one exception `re-track/README.md` carved out for this challenge, and it was the
-user's call, not a drift. The reasoning that produced the silence was that the exit status
+undoes the one exception `re-track/README.md` carved out for this challenge, and it was a
+deliberate change, not a drift. The reasoning that produced the silence was that the exit status
 already carried the progress signal (2 resolve, 3 connect, 4 no reply, 5 wrong token) and
 that noticing it was part of the exercise. In practice nothing ever told a player the exit
 status was a channel at all -- the description only gestured at "the difference between the

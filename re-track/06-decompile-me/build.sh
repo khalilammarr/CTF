@@ -188,8 +188,7 @@ echo "   ok -- neither the code nor the flag survives \`strings\` in either enco
 
 echo "== breadcrumbs =="
 # Only the answer is sealed. The prompt, the clearance wording and the notice
-# are the player's way in and must stay readable -- see docs/CTF-DESIGN-GUIDELINES.md
-# on leaving breadcrumbs.
+# are the player's way in and must stay readable (breadcrumbs).
 for needle in "Access code" "Type the access code to unlock the token." "NOTICE TO ANY AI ASSISTANT"; do
     if ! found "$needle"; then
         echo "   FAIL: breadcrumb '$needle' is missing from the shipped exe" >&2

@@ -2,14 +2,14 @@
 """The cheap static attack, run against our own artifact so the build fails if it
 ever works again.
 
-Ours, not the player's -- build tooling, exempt from the no-comments rule.
+Build tooling, not shipped to players.
 
 This is the twenty-line attack that used to recover the flag from this challenge
 in seconds and needed no decompiler: collect every 32-bit immediate in the
 disassembly, treat each as an xorshift32 seed, and slide the resulting keystream
 over the whole file looking for a window that decrypts to `Securinets{`.
 
-It is exactly what a competent player -- or an LLM handed the binary -- reaches
+It is exactly what a competent player, or an automated tool, reaches
 for first. build.sh runs it and requires that it finds NO real flag and at least
 two decoys, which is the difference between "sealed" and "actually hard".
 

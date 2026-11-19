@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """Official solver for Decompile Me -- recover the access code.
 
-Ours, not the player's: tools and solutions are exempt from the no-comments
-rule (CLAUDE.md exempts tools/).
+Reference solution, not shipped to players.
 
 This is the static half of the intended solve, done the way a player would do
 it if they chose not to reach for the debugger: decompile the shipped assembly

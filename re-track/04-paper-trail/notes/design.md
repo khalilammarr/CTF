@@ -16,7 +16,7 @@ Python; running it gives the passphrase, and the passphrase unseals the flag.
 - **Python 3.8 is a hard pin, and it is the whole reason this challenge works.** uncompyle6 and
   pycdc decompile 3.8 bytecode cleanly. Built on the host's 3.14, every decompiler a beginner
   reaches for returns "version unsupported" and the challenge is unsolvable as designed. This is
-  precisely the `docs/CTF-DESIGN-GUIDELINES.md` red flag about tasks whose research stage has no
+  the failure mode where the research stage has no
   route available in the allotted time. **Do not bump the venv.**
 - **`--noupx`.** UPX on top would add a second layer, but UPX-compressed PyInstaller bundles
   routinely confuse `pyinstxtractor` and the failure looks like a corrupt download, not a puzzle.

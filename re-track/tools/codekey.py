@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Compute the code-derived key that Dead Air seals its blobs under.
 
-Build tooling, so the no-comments rule does not apply (CLAUDE.md exempts tools/).
+Build tooling, not shipped to players.
 
 The binary derives its keystream seeds at run time by hashing its OWN machine
 code -- 64 bytes starting at `unwrap` -- instead of using a constant. This

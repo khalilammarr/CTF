@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The Night Shift transform, in one place.
 
-Build tooling, so the no-comments rule does not apply (CLAUDE.md exempts tools/).
+Build tooling, not shipped to players.
 
 This file is the single definition of the forward transform. build.sh uses it
 to generate the comparison table the binary ships, and solution/solve.py uses

@@ -139,7 +139,7 @@ echo "== but the first step is still findable =="
 # Sealing the hostname is only fair if watching the process reveals it. glibc
 # puts the name in cleartext into the DNS query it emits, so strace/tcpdump
 # recover it. If that stops being true this becomes a guessing game, which
-# docs/CTF-DESIGN-GUIDELINES.md rules out -- so assert it every build.
+# is not a fair task -- so assert it every build.
 strace -f -s 300 "$OUT" > build/.trace 2>&1 || true
 grep -aq "meridian-fs" build/.trace \
     || { echo "   FAIL: the hostname appears in no syscall -- nothing points at step one" >&2; exit 1; }
@@ -230,10 +230,10 @@ rm -f build/.hosts build/.relay.log build/.strings build/.trace
 
 cp ../NOTICE.txt build/NOTICE.txt
 echo
-echo "REMINDER  NOTICE.txt is attached to this challenge on CTFd alongside the binary."
+echo "REMINDER  NOTICE.txt is attached to this challenge on the scoreboard alongside the binary."
 echo "          It is embedded in the artifact too, but on the PyInstaller bundle it"
 echo "          only surfaces after extraction -- the companion file is what guarantees"
-echo "          an assistant sees it before it starts work."
+echo "          the notice is read before anyone starts work."
 
 echo
 echo "BUILT  $OUT          (ships)"

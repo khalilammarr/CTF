@@ -96,10 +96,10 @@ echo "   ok -- near-miss keys are refused"
 
 cp ../NOTICE.txt build/NOTICE.txt
 echo
-echo "REMINDER  NOTICE.txt is attached to this challenge on CTFd alongside the binary."
+echo "REMINDER  NOTICE.txt is attached to this challenge on the scoreboard alongside the binary."
 echo "          It is embedded in the artifact too, but on the PyInstaller bundle it"
 echo "          only surfaces after extraction -- the companion file is what guarantees"
-echo "          an assistant sees it before it starts work."
+echo "          the notice is read before anyone starts work."
 
 echo
 echo "BUILT  $OUT"

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Turn NOTICE.txt into an embeddable constant, for C or for Python.
 
-Build tooling, so the no-comments rule does not apply (CLAUDE.md exempts tools/).
+Build tooling, not shipped to players.
 
 One source of truth. The notice is embedded in every shipped artifact in this
 track, and generating it from NOTICE.txt means the copy in a binary cannot drift

@@ -6,8 +6,7 @@ is where a beginner gets their first real win, because a .NET assembly decompile
 that reads like the source it was compiled from. The whole point of this challenge is that the
 player installs dnSpy and ILSpy, opens the exe, and sees the program's own source staring back.
 
-**No story.** The page says what the program is, what to install, and what to do — by the user's
-instruction, and it applies to the program's own output too. The prompts are plain
+**No story.** The page says what the program is, what to install, and what to do. That applies to the program's own output too. The prompts are plain
 (`Access code:`, `Wrong code. The form is KEY-XXXXXXXX.`), the name says the task out loud, and
 the only flavour left is that the data it holds looks like real records instead of `foo`/`bar`.
 That is the noise layer doing its job, not a narrative. **Do not put the fiction back.**
@@ -30,8 +29,7 @@ a leak: it is what makes both intended paths legitimate.
 - **Static (ILSpy).** Read the derivation, filter and sort 24 records by hand or in a script,
   do eight multiplications mod 24. Ten minutes, no debugger, entirely fair.
 
-`docs/CTF-DESIGN-GUIDELINES.md` is explicit that an Effect/Method task with more than one method
-is a feature. The arithmetic is deliberately sized to sit right at the line where a beginner
+A task with more than one valid method is a feature, not a defect. The arithmetic is deliberately sized to sit right at the line where a beginner
 starts wondering whether the machine could just tell them — which is the moment the debugger
 becomes worth learning, and the reason this is the rung where it gets taught.
 
@@ -63,7 +61,7 @@ becomes worth learning, and the reason this is the rung where it gets taught.
   the C# so a constant stops appearing and the build breaks instead of drifting.
 - **`Ledger` is real, boring, unrelated work** — straight-line depreciation over eight assets,
   printed on startup. It is there so the interesting 2% is not the only thing in the file.
-  Non-negotiable #4. It does not participate in the derivation and never should, and it is data,
+  It does not participate in the derivation and never should, and it is data,
   not a plot.
 - **Designer mode is a compile-time `DESIGNER` constant**, built to `build/designer/` every run.
   `build.sh` asserts the designer build prints the code and that the strings `designer` and
@@ -77,13 +75,13 @@ becomes worth learning, and the reason this is the rung where it gets taught.
 ## Honest limits
 
 - **The exe contains everything needed to solve it, offline.** Like rungs 01–04, and unlike the
-  Android and game tracks, there is no server in the loop: a capable agent with the file can
+  Android and game tracks, there is no server in the loop: anyone with the file can
   recover the code. That is a property of a self-contained beginner RE task, accepted
   deliberately. `NOTICE.txt` is the only mitigation and it is a speed bump, not a control.
 - **Not yet played on real Windows with real dnSpy.** Everything here was built and verified on
   Linux, running the exe under wine. The claims that matter to a player — dnSpy loads it, a
   breakpoint in decompiled code hits, the locals window shows the code — have not been observed
-  on `win11-malware-lab`. That pass is mandatory before it ships, and `build.sh` says so.
+  on a real Windows machine. That pass is mandatory before it ships, and `build.sh` says so.
 
 ## Do not add
 

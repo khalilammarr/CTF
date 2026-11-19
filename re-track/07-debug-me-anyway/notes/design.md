@@ -9,8 +9,7 @@ jobs, both introductory:
 
 That is all it does. It is not trying to be hard, and it must not be made hard.
 
-Flag `Securinets{<redacted>}`, recorded in
-`secrets/flags.json` as `re-07-debug-me-anyway`.
+The flag is kept outside the repository.
 
 ## The whole thing
 
@@ -92,7 +91,7 @@ verification harness needs no stdin games — `</dev/null` is fine.
 ## What was taken OUT, and do not put it back here
 
 An earlier iteration of this rung had all of the following. Every one of them was
-a dead end that punished a beginner for experimenting, and the user's call was to
+a dead end that punished a beginner for experimenting, and the decision was to
 strip it back to an introduction:
 
 - **An encrypted payload keyed off the CHECK's own bytes**, which made hex-editing
@@ -127,7 +126,7 @@ five commands with no traps.
 - **`continue` then Ctrl+C** is documented as an alternative to `break fgets`, for
   players who would rather interrupt than set a second breakpoint.
 - **`report.c` stays** — real, boring arithmetic printed on startup, untouched by
-  the check. Non-negotiable #4, and it is the only "noise" left.
+  the check, and it is the only "noise" left.
 - **The flag is never printed**, so running the binary can never leak it, and the
   memory read is a real instruction rather than flavour.
 

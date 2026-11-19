@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """Emit four working-but-wrong unsealers plus their sealed blobs.
 
-Ours, not the player's -- build tooling, so CLAUDE.md's no-comments rule does
-not apply here.
+Build tooling, not shipped to players.
 
 Point: poison the cheap static attack. Scanning the file for a 32-bit immediate
 that turns some byte run into `Securinets{...}` is about twenty lines of Python
@@ -19,7 +18,7 @@ that runs, so at run time exactly one flag-shaped string exists in memory and
 `search -t bytes Securinets{` has a single hit.
 
 Fake flags are deliberately plausible and deliberately not insulting -- a player
-who submits one gets "incorrect" from CTFd, which is the feedback.
+who submits one gets "incorrect" from the scoreboard, which is the feedback.
 """
 
 import argparse

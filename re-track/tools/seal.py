@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """Seal a flag under a key and emit a C header.
 
-Ours, not the player's -- this file is build tooling, so the no-comments rule
-does not apply here (CLAUDE.md exempts tools/).
+Build tooling, not shipped to players.
 
 The flag never exists as a contiguous string in any shipped artifact. The
 binary carries only the sealed bytes; the plaintext is reconstructed at run
@@ -11,8 +10,8 @@ build output must return nothing flag-shaped -- build.sh checks that.
 
 Primitive is FNV-1a 32 for key -> seed, then an xorshift32 keystream XORed
 over the payload. Deliberately the same xorshift32 variant already used by
-secrets/gen_sirr_blob.py and the game track, so there is one primitive in the
-project rather than five, and it is short enough that a beginner can follow
+the event's game-track builds, so there is one primitive across the event
+rather than five, and it is short enough that a beginner can follow
 the C by eye.
 
     seal.py --key KEY --flag-file src/flag.txt --symbol SEALED --out src/payload.h
