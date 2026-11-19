@@ -1,18 +1,21 @@
-## Reverse Engineering
+# RE track: solution summaries
 
-### The beginner ladder — five Linux ELF challenges
-One noir arc (Meridian Field Service), five different moves, no two solved the same way. The
-flag is never a stored string in any of them: one primitive throughout (FNV-1a 32 for
-key → seed, then an xorshift32 keystream, shared via `re-track/tools/seal.py`), unsealed into
-a stack buffer at run time. Secrets live in each challenge's `src/*.txt`, gitignored.
+Short spoiler-level summaries of the intended solve for each challenge in the ladder. Full
+reference solvers are in each `NN-name/solution/`, and the reasoning behind each design is in
+`NN-name/notes/design.md`. Per-challenge write-ups for players are on
+https://khalilammar.me/writeups/.
 
-#### 1. Doorman — 100
+Flags are never stored as strings in any of these. One primitive throughout (FNV-1a 32 for
+key to seed, then an xorshift32 keystream, shared via `tools/seal.py`), unsealed into a stack
+buffer at run time. Secrets live in each challenge's `src/*.txt`, which are not committed.
+
+### 1. Doorman — 100
 `strings` gives up the UI and nothing else. The badge code is sealed, but `main` compares it
 with `strcmp`, so the process hands it over: `ltrace ./doorman`, type anything, and both
 arguments of the call are printed side by side — yours and the real one. Feed the real one back.
 Lesson: what a binary hides statically it often performs anyway. Watch it run.
 
-#### 2. Night Shift — 200
+### 2. Night Shift — 200
 The same trick deliberately fails: `accepts()` never calls a library compare, it transforms
 your input byte by byte and checks each result against a table in `.rodata`. Per byte it XORs
 with `0x5a + 7i`, then rotates left by `i & 7`, then compares. Both steps are visible in
@@ -21,7 +24,7 @@ over the table bytes. `solution/solve.py` does exactly that, differing from a pl
 that it locates the table by parsing the ELF rather than by eye.
 Lesson: when there is nothing to trace, the answer is in the arithmetic. Read it and run it backwards.
 
-#### 3. Broken Lock — 250
+### 3. Broken Lock — 250
 `licensed()` reads `/etc/meridian/service.lic`, insists on exactly 16 bytes, FNV-hashes them
 and compares against a constant. Nothing you write satisfies it — a 32-bit target over 16 free
 bytes is findable by brute force in principle, but the challenge is not asking for that. The
@@ -30,7 +33,7 @@ happens to equal the file offset, and the six bytes of its prologue become `b8 0
 (`mov eax, 1 ; ret`). Patch with a hex editor, or set `$eax` and return in `gdb`.
 Lesson: an unsatisfiable gate is a hint about method — stop trying to pass it and change it.
 
-#### 4. Paper Trail — 250
+### 4. Paper Trail — 250
 A ~10 MB "binary" that prints four lines. `_MEIPASS`, `pyimod` and `PYZ` in the strings, plus
 `python3.8`, say what it is and which decompiler to reach for. `pyinstxtractor-ng` unpacks it,
 `uncompyle6` (or `pycdc`) turns `paper_trail.pyc` and `payload.pyc` back into readable source,
@@ -39,12 +42,12 @@ digest of the passphrase. Unseal the first, then the second — or just type the
 the program.
 Lesson: recognising the container is most of the work. A packed interpreter is not a stripped binary.
 
-#### 5. Dead Air — 350
+### 5. Dead Air — 350
 The hostname, the token and the flag are all sealed, and the seeds are not constants either —
 `code_key()` hashes 64 bytes of the binary's own `.text` at run time and XORs that in, so
-lifting a seed out of a decompiler listing yields garbage. The binary also says nothing useful:
-one generic failure line, with progress reported only in the exit code (2 did not resolve,
-3 resolved but nothing answered, 4 silence, 5 wrong token).
+lifting a seed out of a decompiler listing yields garbage. The binary prints one line per
+failure stage (does not resolve, nothing listening, silence, wrong reply), and the stage is
+also the exit code (2, 3, 4, 5).
 The way in is that glibc puts the name in cleartext into the DNS query, so `strace -f -s 300`
 (or `tcpdump`) yields the hostname the binary will not print. Point it at yourself in
 `/etc/hosts`, listen on 8080 — deliberately unprivileged, no root needed — and it sends
@@ -53,30 +56,20 @@ contains that token back, then unseals the flag under `digest(token)`.
 Lesson: a client that has stopped being able to reach its server will still tell you who it was
 looking for, and will still tell you what it expects to hear.
 Honest limit: anything the binary computes offline an emulator can compute too. What the
-hardening buys is that reading the decompiler output and reimplementing it is not enough.
+self-hash buys is that reading the decompiler output and reimplementing it is not enough.
 
+### 6. Decompile Me — 150
+A Windows .NET Framework 4.8 console app (`CodeCheck.exe`) that asks for an access code. The code
+is not stored: `Authority.Expected()` builds it at run time from a personnel roster (the eight
+records at clearance 4, ordered by hire year, each indexing a 24-character wheel with
+`(Badge * 31 + HireYear) % 24`). ILSpy turns the shipped assembly back into C#, and you can
+either do the arithmetic or break in dnSpy while the code is being built and read it from the
+locals window. Lesson: managed code keeps its names and structure, and a decompiler gives it back.
 
-### Straight Key
-A Windows "keyboard self-test" that types one character over and over. The message isn't in
-the characters — it's in how long each key is **held**. Read the durations and you read the
-text.
-Lesson: the channel is timing, not content. Run it only in a disposable VM.
-
-### Water Run (Beginner)
-A Godot game with a wall that ends the run. The jump-power value lives in a plain C struct on
-the heap, so a 4-byte Cheat Engine scan finds it and it is writable.
-Clear the wall and collect the artifact; the flag is reconstructed from that state, never
-stored as a string.
-Lesson: game state in native memory is editable by whoever owns the process.
-
-### Water Run: Revenge (Advanced)
-Same wall, but the writable jump field is gone. Only live vertical velocity is in memory, so
-it takes unknown-initial-value plus increased/decreased scans to pin down.
-Lesson: the technique is the same; removing the convenient value only raises the effort.
-
-### Sample (SpoolHelper) — malware analysis
-A clean-room dropper. Its URLs are RC4-encrypted constants, so `strings` finds nothing; it
-shells out to fetch a decoy, then a stager, then a payload, and the stager deletes itself,
-so the contents survive only in a packet capture.
-Answer the 19 questions over `nc` to get the flag. Static analysis alone will not finish it.
-Lesson: dynamic analysis is not optional when the sample erases its own evidence.
+### 7. Debug Me Anyway — introductory debugger challenge
+`leashed()` calls `ptrace(PTRACE_TRACEME)`, which fails under a debugger, and `main` refuses to
+continue. The solve is five gdb commands: `break ptrace`, `run`, `finish`, `set $rax = 0`,
+`continue`, then `call (char *) reveal()` on a function the program never calls itself
+(`solution/gdb-walkthrough.md`). The real unsealer ships XOR-encrypted in its own section, keyed by
+a hash of the program's `.text`, with four decoy unsealers that each yield a plausible wrong flag,
+so a static shortcut returns wrong answers. Lesson: a check whose result you can read can be lied to.

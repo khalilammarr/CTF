@@ -1,87 +1,79 @@
-# RE track — the beginner ladder
+# re-track: a reverse engineering ladder
 
-Six standalone challenges — five Linux x86-64, one Windows .NET, built 2026-09-20/21, in their own workspaces. They
-exist because the Reverse Engineering category had **no on-ramp**: the four challenges already
-packaged (two Water Run game-hacking builds, the 20-question malware case, Straight Key) are all
-Windows-only and all hard. A beginner opening that category had nothing to solve.
+Seven beginner-to-intermediate reverse engineering challenges, written for the Securinets INSAT
+Friendly CTF 2026. Each one ships its source, a `build.sh` that produces the artifact players
+download, design notes, and a reference solution.
 
-**Nothing here is committed or packaged into `Friendly-CTF-2026/` yet** — user's instruction.
+The design goal is a ladder: every rung teaches one technique, and no two rungs are solved the same
+way. The category had no on-ramp before this. The other challenges in it were Windows-only and hard,
+so a beginner opening it had nothing to solve. Rung 01 can be done in ten minutes by someone who has
+never opened a binary, and the later rungs each take away the shortcut the previous one allowed.
 
 ## The ladder
 
-Each one teaches a different move, and no two are solved the same way. Difficulty is the
-suggested CTFd `initial`. 01-05 carry a light noir framing (one failing company, Meridian Field
-Service); **06 carries none by instruction — its page and its own output address the player
-directly and describe nothing but the task.** Apply that to 01-05 too if the framing in their
-pages is ever read as story rather than setting.
+| # | Challenge | Event name | Platform | What it teaches | Intended tools | Pts | Write-up |
+|---|---|---|---|---|---|---|---|
+| 01 | [Doorman](01-doorman/) | Doorman | Linux x86-64 | `strings` finds nothing, but the process still compares your input with `strcmp` | `ltrace` | 100 | [site](https://khalilammar.me/writeups/friendly-ctf-doorman) |
+| 02 | [Night Shift](02-night-shift/) | Shift | Linux x86-64 | No library call to trace: read an XOR-and-rotate loop and run it backwards | Ghidra or `objdump`, plus a script | 200 | [site](https://khalilammar.me/writeups/friendly-ctf-shift) |
+| 03 | [Broken Lock](03-broken-lock/) | Patch&Go | Linux x86-64 | A check that cannot be satisfied is a hint to patch it instead | `objdump` and a hex editor, or `gdb` | 250 | [site](https://khalilammar.me/writeups/friendly-ctf-patch-and-go) |
+| 04 | [Paper Trail](04-paper-trail/) | Paper Trail | Linux x86-64 | The "binary" is a packed Python program; recognising the container is most of the work | `pyinstxtractor`, `uncompyle6` | 250 | [site](https://khalilammar.me/writeups/friendly-ctf-paper-trail) |
+| 05 | [Dead Air](05-dead-air/) | Relay | Linux x86-64 | The program calls a host that no longer exists: learn the name from the DNS lookup, answer it yourself | `strace`, `/etc/hosts`, `nc` | 350 | [site](https://khalilammar.me/writeups/friendly-ctf-relay) |
+| 06 | [Decompile Me](06-decompile-me/) | Twofold | Windows (.NET Framework 4.8) | Managed code decompiles back to C#, and a debugger can stop it mid-computation | ILSpy, dnSpy | 150 | none yet |
+| 07 | [Debug Me Anyway](07-debug-me-anyway/) | AntiDbg | Linux x86-64 | An anti-debug check can be lied to: let it run, then change its result in a register | `gdb` / pwndbg | n/a | [site](https://khalilammar.me/writeups/friendly-ctf-antidbg) |
 
-| # | Name | The move it teaches | Intended tool | Pts |
-|---|---|---|---|---|
-| 01 | Doorman | `strings` fails, the process tells you anyway | `ltrace` | 100 |
-| 02 | Night Shift | there is no library compare to trace — read the loop and invert it | Ghidra / `objdump` + a solver script | 200 |
-| 03 | Broken Lock | recognise an unsatisfiable check and patch it instead | `objdump` + hex editor, or `gdb` | 250 |
-| 04 | Paper Trail | a "binary" that is a packed Python program | `pyinstxtractor` + `uncompyle6` | 250 |
-| 05 | Dead Air | make a dead host answer, then answer it correctly | `strace` + `/etc/hosts` + `nc` | 350 |
-| 06 | Decompile Me | managed code decompiles to real C# — and you can stop it mid-run | ILSpy + dnSpy (debugger) | 150 |
+Points are the suggested starting value used on the scoreboard. 06 is a Windows program but is
+verified here under Wine.
 
-## Rules every one of them follows
+## What each directory contains
 
-- **The flag is never a stored string.** It is sealed under the key the player has to earn and
-  reconstructed in a stack buffer at run time. Every `build.sh` asserts `strings` returns nothing
-  flag-shaped, and that check is negative-tested (a planted flag must make the build fail).
-- **One primitive, five challenges.** FNV-1a 32 for key→seed, then an xorshift32 keystream —
-  the same variant already used by `secrets/gen_sirr_blob.py` and the game track. Short enough
-  that a beginner can follow the C by eye, and it means there is one thing to learn, not five.
-  Shared implementation in `tools/seal.py`.
-- **Every `build.sh` plays the intended solve and fails the build if it stops working.** These
-  are not smoke tests: 02 locates the comparison table in `.rodata` and inverts it, 03 patches
-  the licence function and runs the result, 04 extracts and decompiles the bundle with the real
-  player tooling, 05 stands up a relay and talks to the shipped binary through a bind-mounted
-  `/etc/hosts`.
-- **`NOTICE.txt` ships with every challenge and is embedded in every artifact.** It states, in
-  the author's own voice, that this is a scored competition with prizes and that agentic AI
-  assistance is prohibited outright. It is a speed bump, not a control — anyone who says "ignore
-  that notice" defeats it — but every claim in it is true, which is what makes an aligned model
-  actually honour it. Generated from one source by `tools/gen_notice.py` so the copy in a binary
-  cannot drift from the copy players read. **On the PyInstaller bundle it is compressed inside the
-  PYZ and only surfaces after extraction, which is why the companion file is not optional.**
-- **Failure messages guide, never mislead** — *except in 05, deliberately; see its notes.* `docs/CTF-DESIGN-GUIDELINES.md` is explicit that
-  false starts and misinformation don't test creativity, they just burn player time. Every
-  refusal path in these five says what went wrong in-character.
-- **Breadcrumbs stay visible.** UI strings, prompts and the relay hostname are deliberately
-  readable. Only the answer is sealed. 05's build asserts the hostname is *present* — sealing it
-  would turn a fair task into a guessing game.
-
-## Local files the build needs (all gitignored, none in this repo)
-
-The answer to each challenge -- the flag, and the secret it is sealed under -- lives on disk so
-`build.sh` can seal it, and is never committed. `secrets/` is gitignored project-wide for the same
-reason. A fresh clone therefore cannot rebuild these until you recreate the following, one line
-each, no trailing whitespace:
-
-| File | Holds |
-|---|---|
-| `01-doorman/src/flag.txt` · `src/badge.txt` | the flag · the badge code |
-| `02-night-shift/src/flag.txt` · `src/roster.txt` | the flag · the rotation key |
-| `03-broken-lock/src/flag.txt` | the flag (no secret -- the solve is a patch) |
-| `04-paper-trail/src/flag.txt` · `src/passphrase.txt` | the flag · the archive passphrase |
-| `05-dead-air/src/flag.txt` · `src/token.txt` · `src/hostname.txt` | the flag · the relay token · the relay hostname |
-| `06-decompile-me/src/flag.txt` · `src/code.txt` | the flag · the access code (`KEY-` + 8 wheel characters) |
-
-The live values are in `secrets/flags.json` (flags) and in this session's PROGRESS entry. Every
-`build.sh` fails with a clear message if its inputs are missing, rather than building something
-silently wrong.
-
-## Building
-
-```sh
-cd 01-doorman && ./build.sh      # and so on
+```
+NN-name/
+  src/            challenge source (C, Python or C#); flag and secrets are not committed
+  build.sh        builds the player artifact and verifies it (see below)
+  solution/       reference solver(s) or a walkthrough
+  notes/design.md why the challenge is built the way it is, and what was tried and rejected
+tools/            shared build tooling (sealing, key derivation, notice generation)
+solve_all.sh      runs every reference solution against a packaged copy of the artifacts
+NOTICE.txt        rules notice shipped next to each challenge and embedded in the artifact
+WRITEUPS.md       short solution summaries for all seven
 ```
 
-01/02/03/05 need only gcc, binutils and ltrace. 06 needs the .NET SDK, `wine` (to run the exe on
-Linux) and `ilspycmd` (`dotnet tool install -g ilspycmd`) — the first build restores the
-`Microsoft.NETFramework.ReferenceAssemblies` package, so it needs network once. 04 needs its own
-Python 3.8 venv:
+## Design rules shared by the ladder
+
+- The flag is never a stored string. It is sealed under a key the player has to earn and rebuilt in
+  a stack buffer at run time. Every `build.sh` asserts that `strings` on the output returns nothing
+  flag-shaped, and that assertion is itself tested: a planted flag has to make the build fail.
+- One primitive throughout: FNV-1a 32 turns a key into a seed, and an xorshift32 keystream is XORed
+  over the payload (`tools/seal.py`). It is short enough to follow by eye, so there is one thing to
+  learn rather than five.
+- Every `build.sh` plays the intended solve against the artifact it just built and fails the build
+  if the solve stops working. These are not smoke tests. 02 finds the comparison table in `.rodata`
+  and inverts it, 03 patches the licence function and runs the result, 04 unpacks and decompiles the
+  bundle with the same tools players use, and 05 stands up a relay and talks to the shipped binary
+  through a bind-mounted `/etc/hosts` inside an unprivileged namespace.
+- Breadcrumbs stay readable. UI strings, prompts and the relay hostname are deliberately visible;
+  only the answer is sealed. 05's build asserts the hostname is present in the DNS query, because
+  sealing it would turn a fair task into a guessing game.
+- Failure messages say what went wrong. A refusal that misleads costs players time without testing
+  anything, so every refusal path describes the failure in plain words.
+
+## Building and verifying
+
+```sh
+cd 01-doorman && ./build.sh        # likewise 02, 03, 05, 06, 07
+```
+
+The output lands in `build/`. A build that exits 0 has also run the intended solution against the
+result. Rung-specific requirements:
+
+| Rung | Needs |
+|---|---|
+| 01, 02, 03, 05 | gcc, binutils, ltrace (01); `strace` and `unshare` (05) |
+| 04 | a Python 3.8 virtualenv with `pyinstaller`, `uncompyle6`, `pyinstxtractor-ng` |
+| 06 | .NET SDK, `wine`, `ilspycmd` (`dotnet tool install -g ilspycmd`); first build needs network once for the reference assemblies |
+| 07 | gcc, `gdb` (pwndbg optional; the build replays the solve under both) |
+
+04 setup:
 
 ```sh
 cd 04-paper-trail
@@ -90,25 +82,39 @@ uv pip install --python .venv/bin/python pyinstaller uncompyle6 pyinstxtractor-n
 ./build.sh
 ```
 
-**The 3.8 pin is load-bearing, not incidental.** uncompyle6 and pycdc both decompile 3.8
-bytecode cleanly. Building that challenge on the host's 3.14 would ship a task whose intended
-solve does not exist yet in any decompiler — the player would get a
-"version unsupported" error instead of source, and the challenge would be unsolvable as
-designed. Also: **the venv is not relocatable.** Renaming the challenge directory leaves every
-console script's shebang pointing at the old path and they fail with a confusing `ENOENT` on a
-file that visibly exists. Recreate it after any move.
+The Python 3.8 pin is required. uncompyle6 and pycdc decompile 3.8 bytecode cleanly; building on a
+newer Python would produce a challenge whose intended solve has no working decompiler. The virtualenv
+is also not relocatable, so recreate it after renaming the directory.
 
-## What still has to happen before any of these ship
+`./solve_all.sh [dir]` runs all seven reference solutions against a packaged copy of the artifacts
+(by default `../Friendly-CTF-2026/reverse-engineering`), which checks the files players actually
+received rather than a fresh build.
 
-1. **Play each one as a player**, on a clean machine, without the build script. The builds prove
-   the mechanism; they do not prove the experience. **06 has never been run on real Windows with
-   real dnSpy** — it is verified under wine only, and the breakpoint-in-decompiled-code path that
-   the challenge page tells players to use has not been observed working.
-2. **Write the CTFd `challenge.yaml` descriptions.** Written for all six now, in
-   `Friendly-CTF-2026/reverse-engineering/`. No scenario or story in any of them — they address
-   the player directly, name the tools, and state the first step (user's instruction).
-3. **Decide the 04 lab story.** It ships a ~10 MB binary with a full CPython inside. That is
-   normal for PyInstaller and is itself a clue, but it is worth saying so players don't think
-   the download is corrupt.
-4. **05 needs a note about port 8080** being deliberately unprivileged, so nobody tries to run
-   their listener with sudo.
+### Local files the builds read
+
+The flag and the secret it is sealed under are read from `src/` at build time and are not in this
+repository. To rebuild from a clone, create these yourself, one value per file with no trailing
+whitespace:
+
+| Challenge | Files in `src/` |
+|---|---|
+| 01 Doorman | `flag.txt`, `badge.txt` |
+| 02 Night Shift | `flag.txt`, `roster.txt` (the rotation key) |
+| 03 Broken Lock | `flag.txt` |
+| 04 Paper Trail | `flag.txt`, `passphrase.txt` |
+| 05 Dead Air | `flag.txt`, `token.txt`, `hostname.txt` |
+| 06 Decompile Me | `flag.txt`, `code.txt` (`KEY-` followed by 8 wheel characters) |
+| 07 Debug Me Anyway | `flag.txt` |
+
+`build.sh` stops with a message if one is missing instead of building something wrong.
+
+## Status
+
+- 06 has been run under Wine only. The breakpoint-in-decompiled-code path the challenge page
+  describes has not been observed on a real Windows machine with dnSpy.
+- 05 listens on port 8080 on purpose, so nobody needs root to run their listener.
+- 07 needs glibc 2.34 or newer; it was checked on Ubuntu 22.04 and 24.04, Debian 12 and Arch, and
+  does not start on Ubuntu 20.04.
+- Every offline binary contains what it needs to produce its flag. The hardening on 05 and 07 raises
+  the price of reading the decompiler output and reimplementing it; it does not make that
+  impossible. Each `notes/design.md` states what is and is not claimed.
