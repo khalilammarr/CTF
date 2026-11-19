@@ -50,3 +50,7 @@ GoCipher/                 GoCipher solution, solver and binary
 ```
 
 Tools used across these: Ghidra and IDA, gdb (with pwndbg or Python scripting), `strace`, `ltrace`, Frida (Backdrop), `xxd`, `qpdf`, `pdfimages`, `stegseek` (pff), ILSpy, dnSpy, `pyinstxtractor`, `uncompyle6` (re-track), and Python 3 for solvers.
+
+## License
+
+MIT, see [LICENSE](LICENSE).
