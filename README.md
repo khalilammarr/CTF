@@ -1,80 +1,75 @@
-# 🔓 MOJO CTF — Reverse Engineering Track
+# CTF
 
-> A set of reverse engineering challenges authored for an internal CTF. Each challenge covers a distinct technique: binary patching, GDB scripting, PDF forensics, steganography, and bash script analysis.
+Reverse engineering and mobile challenge material by Khalil Ammar (fadigaa, team MOJO-JOJO,
+Securinets INSAT): solutions to challenges I solved in competitions, and challenges I wrote, with
+their source and reference solvers.
 
----
+Longer write-ups for some of these are on https://khalilammar.me/writeups/. The files in this
+repository are the working material: solver scripts, challenge binaries where they were
+distributed, and the solution notes.
 
-## 📁 Repository Structure
+## Challenges I authored
+
+### re-track: a seven-challenge reverse engineering ladder
+
+Written for Securinets INSAT's Friendly CTF 2026. Each rung teaches one technique (`ltrace`, reading
+and inverting a loop, patching a check, unpacking a PyInstaller bundle, faking a DNS answer,
+decompiling .NET, lying to an anti-debug check). Each directory has the source, a `build.sh` that
+builds the player artifact and replays the intended solve, design notes and a reference solution.
+See [re-track/README.md](re-track/README.md) for the full table and build instructions.
+
+| # | Challenge | Technique | Write-up |
+|---|---|---|---|
+| 01 | [Doorman](re-track/01-doorman/) | `ltrace` on a `strcmp` | [site](https://khalilammar.me/writeups/friendly-ctf-doorman) |
+| 02 | [Night Shift](re-track/02-night-shift/) | invert an XOR-and-rotate loop | [site](https://khalilammar.me/writeups/friendly-ctf-shift) |
+| 03 | [Broken Lock](re-track/03-broken-lock/) | patch an unsatisfiable check | [site](https://khalilammar.me/writeups/friendly-ctf-patch-and-go) |
+| 04 | [Paper Trail](re-track/04-paper-trail/) | unpack a PyInstaller bundle | [site](https://khalilammar.me/writeups/friendly-ctf-paper-trail) |
+| 05 | [Dead Air](re-track/05-dead-air/) | answer a host that no longer exists | [site](https://khalilammar.me/writeups/friendly-ctf-relay) |
+| 06 | [Decompile Me](re-track/06-decompile-me/) | decompile and debug .NET | none yet |
+| 07 | [Debug Me Anyway](re-track/07-debug-me-anyway/) | change an anti-debug result in a register | [site](https://khalilammar.me/writeups/friendly-ctf-antidbg) |
+
+### MOJO CTF
+
+An internal CTF run by the MOJO-JOJO team. The binaries and files that were handed out are included
+next to each solution and solver.
+
+| Challenge | Category | Techniques | Solution | Write-up |
+|---|---|---|---|---|
+| warmup | Rev | ELF header repair, ptrace anti-debug bypass, LCG cipher | [Solution.md](Mojo_CTF_Release/warmup/Solution.md) | [site](https://khalilammar.me/writeups/mojo-warmup) |
+| slow | Rev | gdb Python automation, function-pointer dispatcher, SHA-256 suffix brute force | [Solution.md](Mojo_CTF_Release/slow/Solution.md) | [site](https://khalilammar.me/writeups/mojo-slow) |
+| pff | Forensics / Rev | PDF JavaScript, steghide passphrase cracking | [Solution.md](Mojo_CTF_Release/pff/Solution.md) | [site](https://khalilammar.me/writeups/mojo-pff) |
+| mojo_vault | Rev / Bash | script self-integrity check, runtime extraction from `/tmp` | [Solution.md](Mojo_CTF_Release/mojo_vault/Solution.md) | [site](https://khalilammar.me/writeups/mojo-vault) |
+| 13337 | Rev | self-modifying code, network handshake, per-chunk MD5 brute force | [Solution.md](Mojo_CTF_Release/13337/Solution.md) | [site](https://khalilammar.me/writeups/mojo-13337) |
+
+13337 was the last challenge of the event and has a public write-up on the site.
+
+## Challenges I solved in competitions
+
+| Challenge | Category | Event | Solution | Write-up |
+|---|---|---|---|---|
+| Backdrop | Mobile / Rev | Securinets International Quals 2026 | [Solution.md](Securinets-Quals-2026/backdrop/Solution.md) | [site](https://khalilammar.me/writeups/backdrop-securinets-quals) |
+| letmethink | Rev | Securinets International Quals 2026 | [Solution.md](Securinets-Quals-2026/letmethink/Solution.md) | none |
+| GoCipher | Rev | Securinets Mini CTF | [Solution.md](GoCipher/Solution.md) | [site](https://khalilammar.me/writeups/gocipher-securinets) |
+
+The Securinets Quals ended on 18 October 2026, so the solutions are published here with their flags.
+
+## Layout
 
 ```
-rev/
-├── README.md               ← You are here
-├── warmup/
-│   ├── chall               ← Challenge binary (corrupted ELF)
-│   ├── solver.py           ← Python decryption solver
-│   └── WRITEUP.md          ← Full writeup
-├── slow/
-│   ├── challenge           ← Challenge binary
-│   ├── solve.py            ← GDB Python brute-force script
-│   ├── brute_suffix.py     ← SHA256 suffix brute-force script
-│   └── WRITEUP.md          ← Full writeup
-├── pff/
-│   ├── JiaTan_Case_Files.pdf  ← Challenge PDF
-│   └── WRITEUP.md          ← Full writeup
-├── mojo_vault/
-│   ├── mojobox.sh          ← Challenge bash script
-│   └── WRITEUP.md          ← Full writeup
-└── 13337/
-    └── chall               ← (Final stage — not released)
+re-track/                        challenge source, build scripts, design notes, solvers
+Mojo_CTF_Release/                MOJO CTF challenges: warmup, slow, pff, mojo_vault, 13337
+Securinets-Quals-2026/           Backdrop and letmethink solutions
+GoCipher/                        GoCipher solution, solver and binary
 ```
 
----
+## Tools used across these
 
-## 🧩 Challenges
-
-| Challenge | Category | Techniques | Flag |
-|-----------|----------|------------|------|
-| [warmup](./warmup/WRITEUP.md) | Rev | ELF header repair, anti-debug bypass, LCG cipher | `MOJO{On_Th3_FlY_D3crypt1on_Is_Pr0!}` |
-| [slow](./slow/WRITEUP.md) | Rev | GDB Python automation, function-pointer dispatcher, SHA256 cracking | `MOJO-JOJO{GD8_Scr1pt1ng_1s_4_Pow3rful_Sk1ll!}` |
-| [pff](./pff/WRITEUP.md) | Forensics/Rev | PDF JS reversal, steghide brute-force | `MOJO-JOJO{h1dd3n_1n_pl41n_s1ght_pdf_m4g1c!}` |
-| [mojo-vault](./mojo_vault/WRITEUP.md) | Rev/Bash | Bash integrity bypass, runtime /tmp extraction | `MOJO-JOJO{c0rrupt3d_but_n0t_d3str0y3d}` |
-
----
-
-## 🛠️ Tools Used
-
-| Tool | Purpose |
-|------|---------|
-| `GDB` + Python API | Dynamic analysis and automated brute-forcing |
-| `xxd` / `hexedit` | Binary inspection and patching |
-| `qpdf` | PDF stream decompression |
-| `pdfimages` | Image extraction from PDF |
-| `stegseek` | High-speed steghide passphrase cracking |
-| `rockyou.txt` | Wordlist for steganography brute-force |
-| `openssl enc` | AES decryption of bash payload |
-| `Python 3` | Solvers, hash cracking, decryption automation |
-
----
-
-## ⚙️ Requirements
-
-```bash
-# GDB with Python support
-sudo pacman -S gdb   # Arch
-sudo apt install gdb # Debian/Ubuntu
-
-# stegseek (stegaseek)
-sudo pacman -S stegseek
-
-# PDF tools
-sudo apt install qpdf poppler-utils
-
-# Python dependencies
-pip install pwntools
-```
-
----
-
-## 👤 Author
-
-Challenges authored by **fadigaa** and team for an internal CTF event.
+| Tool | Used for |
+|---|---|
+| Ghidra, IDA | static analysis |
+| gdb (with pwndbg or Python scripting), `strace`, `ltrace` | dynamic analysis, automated brute force, tracing |
+| Frida | hooking an Android app (Backdrop) |
+| `xxd`, hex editors | inspecting and patching binaries |
+| `qpdf`, `pdfimages`, `stegseek` | PDF and steganography work (pff) |
+| ILSpy, dnSpy, `pyinstxtractor`, `uncompyle6` | managed and packed code (re-track) |
+| Python 3 | solvers, brute force, decryption |
